@@ -4,3 +4,9 @@ export const postsTable = pgTable("posts", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   content: varchar({ length: 255 }).notNull(),
 });
+
+export const usersTable = pgTable("users", {
+  id: integer().primaryKey(),
+  username: varchar({ length: 255 }).notNull().unique(),
+  password: varchar({ length: 255 }).notNull(),
+});
