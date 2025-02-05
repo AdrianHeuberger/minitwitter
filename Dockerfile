@@ -1,14 +1,21 @@
-# Base Image with Bun pre-installed
-FROM oven/bun:latest
+# Use a base image with Node.js
+FROM node:18-alpine
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the Source Code
-COPY . /app/
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install
 
-# Install the dependencies
-RUN bun install
+# Copy the rest of the application files
+COPY . .
 
-# Start the Application
-CMD ["bun", "src/app.ts"]
+# Build the application (if necessary)
+RUN npm run build
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Define the command to run the application
+CMD ["npm", "run", "prod"]

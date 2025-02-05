@@ -13,6 +13,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@nuxtjs/tailwindcss": "^6.13.1",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "bcrypt": "^5.1.1",
@@ -24,6 +25,26 @@
   },
   "scripts": {
     "dev": "bun --watch ./src/app.ts",
-    "prod": "bun ./src/app.ts"
+    "prod": "bun ./src/app.ts",
+    "build": "tsc"
+  }
+}
+{
+  "name": "minitwitter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "bun --watch ./src/app.ts",
+    "prod": "bun ./src/app.ts",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bun": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4"
   }
 }
