@@ -1,3 +1,5 @@
+import { defineNuxtConfig } from 'nuxt/config'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
@@ -13,7 +15,3 @@ export default defineNuxtConfig({
     },
   },
 })
-
-function defineNuxtConfig(arg0: { compatibilityDate: string; devtools: { enabled: boolean; }; ssr: boolean; modules: string[]; devServer: { port: number; }; runtimeConfig: { public: { apiBaseUrl: string; }; }; }) {
-  throw new Error("Function not implemented.");
-}

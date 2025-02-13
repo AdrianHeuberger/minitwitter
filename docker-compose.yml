@@ -21,7 +21,7 @@ services:
       - ./docker-data/postgres:/var/lib/postgresql/data
 
   Post-API-1:
-    image: adi-image 
+    image: adrianheuberger/adi-image 
     environment: 
       DATABASE_URL: postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
     command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
@@ -29,7 +29,7 @@ services:
       - my-postgres
     
   Post-API-2:
-    image: adi-image 
+    image: adrianheuberger/adi-image 
     environment: 
       DATABASE_URL: postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
     command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
@@ -43,4 +43,3 @@ services:
     environment:
       - NUXT_PUBLIC_API_BASE_URL=http://localhost:80
 
-      
