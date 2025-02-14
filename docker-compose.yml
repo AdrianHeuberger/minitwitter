@@ -39,9 +39,6 @@ services:
     ports:
       - "3001:3000"
     command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
-    depends_on:
-      my-postgres:
-        condition: service_healthy
     networks:
       - app-network
 
@@ -55,9 +52,6 @@ services:
     ports:
       - "3002:3000"
     command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
-    depends_on:
-      my-postgres:
-        condition: service_healthy
     networks:
       - app-network
 
@@ -82,32 +76,3 @@ networks:
 
 volumes:
   postgres_data:
-
-# Use a base image with Node.js
-FROM node:18-alpine
-
-# Set the working directory in the container
-WORKDIR /app
-
-# Copy package files and install dependencies
-COPY package*.json ./
-RUN npm install
-
-# Copy the rest of the application files
-COPY . .
-
-# Build the application
-RUN npm run build
-
-# Expose the port the app runs on
-EXPOSE 3000
-
-# Define the command to run the application
-CMD ["npm", "run", "prod"]
-
-{
-  "scripts": {
-    "build": "tsc && npm run build",
-    "prod": "node dist/app.js"
-  }
-}
