@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   modules: ['@nuxtjs/tailwindcss'],
-    devServer: {
+  devServer: {
     port: 4000,
   },
   runtimeConfig: {
