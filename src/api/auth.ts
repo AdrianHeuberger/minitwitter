@@ -19,9 +19,9 @@ export const initializeAuthAPI = (app: Express) => {
 
         const token = jwt.sign({ id: newUser[0].id, username: newUser[0].username },
             jwtSecret, { expiresIn: '1h' })
-        res.send(token)
-        res.send({ id: newUser[0].id, username: newUser[0].username })
+        res.send({ token })
     })
+
     app.post('/api/auth/login', async (req: Request, res: Response) => {
         const { username, password } = req.body
 

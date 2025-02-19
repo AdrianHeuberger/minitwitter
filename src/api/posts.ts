@@ -23,15 +23,35 @@ export const initializePostsAPI = (app: Express) => {
 
       // PUT-Function to update an existing content
   app.put('/posts/:id', async (req: Request, res: Response) => {
+    const userId = req.user?.id
+    if (!userId) {
+        res.status(401).send({ error: 'Unauthorized' })
+        return
+    }
     const id = parseInt(req.params.id)
+    const post = await db.select().from(postsTable).where(eq(postsTable.id, id)).first()
+    if (!post || post.userId !== userId) {
+        res.status(403).send({ error: 'Forbidden' })
+        return
+    }
     await db.update(postsTable).set(req.body).where(eq(postsTable.id, id))
     res.send('OK')
-  })
+})
 
   // DELETE-function to delete contents
   app.delete('/posts/:id', async (req: Request, res: Response) => {
-    const id = parseInt(req.params.id)
-    await db.delete(postsTable).where(eq(postsTable.id, id))
-    res.send('OK')
-  })
+    const userId = req.user?.id
+        if (!userId) {
+            res.status(401).send({ error: 'Unauthorized' })
+            return
+        }
+        const id = parseInt(req.params.id)
+        const post = await db.select().from(postsTable).where(eq(postsTable.id, id)).first()
+        if (!post || post.userId !== userId) {
+            res.status(403).send({ error: 'Forbidden' })
+            return
+        }
+        await db.delete(postsTable).where(eq(postsTable.id, id))
+        res.send('OK')
+    })
 }
