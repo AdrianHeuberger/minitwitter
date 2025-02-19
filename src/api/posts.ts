@@ -11,7 +11,7 @@ export const initializePostsAPI = (app: Express) => {
     })
 
     app.post('/api/posts', async (req: Request, res: Response) => {
-      const userId req.user?.id
+      const userId = req.user?.id
       if (!userId) {
         res.status(401).send({ error: 'Unauthorized' })
         return
