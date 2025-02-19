@@ -11,8 +11,14 @@ export const initializePostsAPI = (app: Express) => {
     })
 
     app.post('/api/posts', async (req: Request, res: Response) => {
-        const newPost = await db.insert(postsTable).values(req.body).returning()
-        res.send(newPost[0])
+      const userId req.user?.id
+      if (!userId) {
+        res.status(401).send({ error: 'Unauthorized' })
+        return
+      }
+      const { content } = req.body
+      const newPost = await db.insert(postsTable).values(req.body).returning()
+      res.send(newPost[0])
     })
 
       // PUT-Function to update an existing content
