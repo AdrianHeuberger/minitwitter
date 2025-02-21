@@ -1,18 +1,25 @@
-import express from 'express'
-import { initializeAPI } from './api'
-import cors from 'cors'
+import express from 'express';
+import { json } from 'body-parser';
+import { registerUser, loginUser } from './controllers/userController';
+import { createPost, getPosts, updatePost, deletePost } from './controllers/postController';
+import { authMiddleware } from './middleware/authMiddleware';
 
-const port = 3000
-const app = express ()
+const app = express();
+app.use(json());
 
-app.use(express.json())
-app.use(cors())
+app.post('/api/register', registerUser);
+app.post('/api/login', loginUser);
 
-initializeAPI(app)
+app.use(authMiddleware);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+app.post('/api/posts', createPost);
+app.get('/api/posts', getPosts);
+app.put('/api/posts/:id', updatePost);
+app.delete('/api/posts/:id', deletePost);
+
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
+});
 
 
 
