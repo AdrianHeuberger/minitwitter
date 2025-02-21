@@ -23,7 +23,10 @@
     "drizzle-orm": "^0.36.3",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.13.1"
+    "ollama": "^0.5.13",
+    "pg": "^8.13.1",
+    "zod": "^3.24.2",
+    "zod-to-json-schema": "^3.24.2"
   },
   "scripts": {
     "dev": "bun --watch ./src/app.ts",
