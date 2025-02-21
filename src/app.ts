@@ -1,7 +1,7 @@
 import express from 'express';
 import { json } from 'body-parser';
 import { registerUser, loginUser } from './controllers/userController';
-import { createPost, getPosts, updatePost, deletePost } from './controllers/postController';
+import { createPost, getPosts, updatePost, deletePost } from './api/posts';
 import { authMiddleware } from './middleware/authMiddleware';
 
 const app = express();

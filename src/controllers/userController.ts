@@ -1,8 +1,9 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { db } from '../db';
 import { usersTable } from '../db/schema';
+import { eq } from 'drizzle-orm';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -23,7 +24,7 @@ export const loginUser = async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
   try {
-    const user = await db.select().from(usersTable).where(usersTable.username.eq(username)).single();
+    const user = await db.select().from(usersTable).where(eq(usersTable.username, username)).first();
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).send({ error: 'Invalid credentials' });
     }

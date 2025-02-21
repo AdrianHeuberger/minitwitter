@@ -26,8 +26,8 @@
     "pg": "^8.13.1"
   },
   "scripts": {
-    "dev": "bun --watch ./src/app.ts",
-    "prod": "bun ./src/app.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "ts-node-dev --respawn src/app.ts"
   }
 }
