@@ -13,7 +13,7 @@ services:
       - post-api-1
       - post-api-2
       - minitwitter-frontend
-  
+    
   my-postgres:
     image: postgres:latest
     container_name: postgres
@@ -37,9 +37,10 @@ services:
       DATABASE_URL: postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
     ports:
       - "3001:3000"
-    command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
+    #command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
     networks:
       - app-network
+    restart: always
 
   post-api-2:
     build:
@@ -50,9 +51,10 @@ services:
       DATABASE_URL: postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
     ports:
       - "3002:3000"
-    command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
+    #command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
     networks:
       - app-network
+    restart: always
 
   minitwitter-frontend:
     build:
@@ -68,6 +70,7 @@ services:
     depends_on:
       - post-api-1
       - post-api-2
+    restart: always
       
   ollama:
     image: ollama/ollama
@@ -78,6 +81,7 @@ services:
       - ./docker-data/ollama:/root/.ollama
     networks:
       - app-network
+    restart: always
 
   redis:
     image: redis/redis-stack:latest
@@ -88,6 +92,7 @@ services:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
     volumes:
       - redis_data:/data
+    restart: always
 
 networks:
   app-network:

@@ -3,10 +3,10 @@ import { defineNuxtConfig } from 'nuxt/config';
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/axios'],
-  axios: {
-    baseURL: process.env.API_BASE_URL || 'http://localhost:3000',
-  },
+  modules: ['@nuxtjs/tailwindcss'],
+//  axios: {
+//    baseURL: process.env.API_BASE_URL || 'http://localhost:3000',
+//  },
   devServer: {
     port: 4000,
   },
