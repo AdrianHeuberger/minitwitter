@@ -18,10 +18,10 @@ const token = localStorage.getItem('token');
 
 const fetchPosts = async () => {
   try {
-    const response = await useFetch('/api/posts', {
+    const { data } = await useFetch('/api/posts', {
       headers: { Authorization: `Bearer ${token}` },
     });
-    posts.value = response.data;
+    posts.value = data.value;
   } catch (error) {
     console.error('Error fetching posts:', error);
   }
@@ -30,7 +30,7 @@ const fetchPosts = async () => {
 const deletePost = async (id: number) => {
   try {
     await useFetch(`/api/posts/${id}`, {
-      method: 'delete
+      method: 'delete',
       headers: { Authorization: `Bearer ${token}` },
     });
     fetchPosts();

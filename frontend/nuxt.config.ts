@@ -4,19 +4,16 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   modules: ['@nuxtjs/tailwindcss'],
-//  axios: {
-//    baseURL: process.env.API_BASE_URL || 'http://localhost:3000',
-//  },
+
   devServer: {
     port: 4000,
   },
+
   runtimeConfig: {
     public: {
       apiBaseUrl: process.env.API_BASE_URL || 'http://localhost:3000',
     },
   },
-  typescript: {
-    strict: true,
-    typeCheck: true,
-  },
+
+  compatibilityDate: '2025-02-26',
 });
