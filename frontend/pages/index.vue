@@ -18,7 +18,7 @@ const token = localStorage.getItem('token');
 
 const fetchPosts = async () => {
   try {
-    const response = await $axios.get('/api/posts', {
+    const response = await useFetch('/api/posts', {
       headers: { Authorization: `Bearer ${token}` },
     });
     posts.value = response.data;
@@ -29,7 +29,8 @@ const fetchPosts = async () => {
 
 const deletePost = async (id: number) => {
   try {
-    await $axios.delete(`/api/posts/${id}`, {
+    await useFetch(`/api/posts/${id}`, {
+      method: 'delete
       headers: { Authorization: `Bearer ${token}` },
     });
     fetchPosts();

@@ -29,7 +29,8 @@ export const initializePostsAPI = (app: Express) => {
         return
     }
     const id = parseInt(req.params.id)
-    const post = await db.select().from(postsTable).where(eq(postsTable.id, id)).first()
+    const posts = await db.select().from(postsTable).where(eq(postsTable.id, id)).execute()
+    const post = posts[0]
     if (!post || post.userId !== userId) {
         res.status(403).send({ error: 'Forbidden' })
         return
@@ -46,7 +47,8 @@ export const initializePostsAPI = (app: Express) => {
             return
         }
         const id = parseInt(req.params.id)
-        const post = await db.select().from(postsTable).where(eq(postsTable.id, id)).first()
+        const posts = await db.select().from(postsTable).where(eq(postsTable.id, id)).execute()
+        const post = posts[0]
         if (!post || post.userId !== userId) {
             res.status(403).send({ error: 'Forbidden' })
             return
