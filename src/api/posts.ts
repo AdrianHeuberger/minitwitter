@@ -2,6 +2,7 @@ import { type Express, type Request, type Response } from 'express'
 import { db } from '../database'
 import { postsTable } from '../db/schema'
 import { eq } from 'drizzle-orm'
+import { sentimentQueue } from '../message-broker';
 
 
 export const initializePostsAPI = (app: Express) => {
@@ -19,6 +20,8 @@ export const initializePostsAPI = (app: Express) => {
       const { content } = req.body
       const newPost = await db.insert(postsTable).values(req.body).returning()
       res.send(newPost[0])
+      // 1. Generate job when new post is created with the post id
+      await sentimentQueue.add('analyzeSentiment', { postId: newPost[0].id });
     })
 
       // PUT-Function to update an existing content
