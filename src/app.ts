@@ -1,7 +1,8 @@
 import express from 'express';
 import { json } from 'body-parser';
 import { initializeAPI } from './api';
-import { initializeMessageBroker } from './message-broker' 
+import { initializeMessageBroker } from './message-broker'
+import { initializeCache } from './services/cache';
 
 const app = express();
 app.use(json());
@@ -13,6 +14,6 @@ app.listen(3000, () => {
 });
 
 initializeMessageBroker() 
-
+initializeCache
 
 
