@@ -35,8 +35,7 @@ services:
     container_name: post-api-1
     environment: 
       DATABASE_URL: postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
-    ports:
-      - "3001:3000"
+    
     #command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
     networks:
       - app-network
@@ -49,8 +48,7 @@ services:
     container_name: post-api-2
     environment: 
       DATABASE_URL: postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
-    ports:
-      - "3002:3000"
+  
     #command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
     networks:
       - app-network
@@ -63,8 +61,7 @@ services:
     container_name: minitwitter-frontend
     environment:
       - NODE_ENV=production
-    ports:
-      - "4000:4000"
+    
     networks:
       - app-network
     depends_on:

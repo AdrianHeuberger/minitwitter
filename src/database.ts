@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
 import * as schema from './db/schema'
+import { integer, pgTable, varchar } from 'drizzle-orm/pg-core'
 
 type DBSchema = NodePgDatabase<typeof schema>
 
@@ -13,5 +14,5 @@ export const postsTable = pgTable('posts', {
     correction: varchar({ length: 255 }), 
     userId: integer() 
       .notNull() 
-      .references(() => usersTable.id, { onDelete: 'cascade' }), 
+      .references(() => schema.usersTable.id, { onDelete: 'cascade' }), 
   }) 

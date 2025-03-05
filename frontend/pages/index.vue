@@ -1,11 +1,14 @@
 <template>
   <div class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">Your Feed</h1>
-    <div v-for="post in posts" :key="post.id" class="mb-4">
-      <div class="bg-white p-4 rounded">
-        <p>{{ post.content }}</p>
-        <button @click="deletePost(post.id)" class="bg-red-500 text-white px-4 py-2 mt-2">Delete</button>
-      </div>
+    <div class="space-y-4">
+      <Post
+        v-for="post in posts"
+        :key="post.id"
+        :post="post"
+        :can-delete="post.userId === currentUserId"
+        @delete="deletePost"
+      />
     </div>
   </div>
 </template>
@@ -15,10 +18,11 @@ import { ref, onMounted } from 'vue';
 
 const posts = ref([]);
 const token = localStorage.getItem('token');
+const currentUserId = ref(null);
 
 const fetchPosts = async () => {
   try {
-    const { data } = await useFetch('/api/posts', {
+    const { data } = await useFetch ('/api/posts', {
       headers: { Authorization: `Bearer ${token}` },
     });
     posts.value = data.value;
