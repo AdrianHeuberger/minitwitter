@@ -1,7 +1,9 @@
 import express from 'express'
-import { initializeAPI } from './api'
 import cors from 'cors'
+import { json } from 'body-parser';
+import { initializeAPI } from './api';
 import { initializeMessageBroker } from './message-broker'
+import { initializeCache } from './services/cache';
 
 const SERVER_ROLE = process.env.SERVER_ROLE || 'all'
 const allowedServerRoles = ['all', 'api', 'worker']
@@ -16,6 +18,9 @@ initializeMessageBroker()
 // For the API server
 if (SERVER_ROLE === 'all' || SERVER_ROLE === 'api') {
   const port = 3000
+
+initializeMessageBroker() 
+initializeCache
 
   const app = express()
   app.use(express.json())
