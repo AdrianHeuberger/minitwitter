@@ -1,18 +1,28 @@
-import express from 'express';
-import { json } from 'body-parser';
-import { initializeAPI } from './api';
-import { initializeMessageBroker } from './message-broker' 
+import express from 'express'
+import { initializeAPI } from './api'
+import cors from 'cors'
+import { initializeMessageBroker } from './message-broker'
 
-const app = express();
-app.use(json());
+const SERVER_ROLE = process.env.SERVER_ROLE || 'all'
+const allowedServerRoles = ['all', 'api', 'worker']
+if (!allowedServerRoles.includes(SERVER_ROLE)) {
+  console.error(`Invalid SERVER_ROLE: ${SERVER_ROLE}`)
+  process.exit(1)
+}
 
-initializeAPI(app);
+// For the worker server & api queue
+initializeMessageBroker()
 
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
-});
+// For the API server
+if (SERVER_ROLE === 'all' || SERVER_ROLE === 'api') {
+  const port = 3000
 
-initializeMessageBroker() 
+  const app = express()
+  app.use(express.json())
+  app.use(cors())
+  initializeAPI(app)
 
-
-
+  app.listen(port, () => {
+    console.log(`MiniTwitter listening on port ${port}`)
+  })
+}

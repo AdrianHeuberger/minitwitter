@@ -90,6 +90,18 @@ services:
     volumes:
       - redis_data:/data
     restart: always
+  minitwitter-worker:
+    image: switzerchees/my-posts-api # change this to our image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+     - DATABASE_URL=postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
+     - OLLAMA_HOST=http://ollama:11434
+     - REDIS_HOST=redis
+     - SERVER_ROLE=worker 
+
+
 
 networks:
   app-network:

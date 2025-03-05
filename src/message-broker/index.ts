@@ -7,6 +7,8 @@ import { textAnalysis } from '../services/ai';
 let sentimentQueue: Queue;
 let sentimentWorker: Worker;
 
+const SERVER_ROLE = process.env.SERVER_ROLE || 'all';
+
 const initializeMessageBroker = () => {
     const connection = new IORedis({
         host: process.env.REDIS_HOST || 'localhost',
@@ -14,15 +16,21 @@ const initializeMessageBroker = () => {
         maxRetriesPerRequest: null,
     });
 
+    // Initialize queue for all server roles
     sentimentQueue = new Queue('sentiment', { connection });
-    sentimentWorker = new Worker('sentiment', analyseSentiment, { connection });
-    console.log('Message Worker Initialized');
+    console.log('Sentiment queue initialized');
+
+    // Initialize worker only for 'all' or 'worker' roles
+    if (SERVER_ROLE === 'all' || SERVER_ROLE === 'worker') {
+        sentimentWorker = new Worker('sentiment', analyseSentiment, { connection });
+        console.log('Sentiment worker initialized');
+    }
 };
 
 const analyseSentiment = async (job: Job) => {
     const jobData = job.data;
     console.log(jobData);
-    // 1. Generate job when new post is created with the post id (in qsi/posts.is POST/PUT endpoint)
+// 1. Generate job when new post is created with the post id (in qsi/posts.is POST/PUT endpoint)
     // see in api/posts.ts
     // 2. Fetch the post from the database
     const postId = jobData.postId;
@@ -34,11 +42,8 @@ const analyseSentiment = async (job: Job) => {
         return;
     }
 
-    // 3. Analyze the sentiment of the post (services/ai.ts -> textAnalysis)
-
     const analysisResult = await textAnalysis(post.content);
 
-    // 4. Update the post with the sentiment
     await db.update(postsTable)
         .set({
             sentiment: analysisResult.sentiment,
