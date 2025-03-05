@@ -3,7 +3,7 @@ import { db } from '../database'
 import { postsTable } from '../db/schema'
 import { eq } from 'drizzle-orm'
 import { sentimentQueue } from '../message-broker';
-
+import { invalidatePostsCache } from '../services/cache';
 
 export const initializePostsAPI = (app: Express) => {
     app.get('/api/posts', async (req: Request, res: Response) => {
@@ -18,10 +18,15 @@ export const initializePostsAPI = (app: Express) => {
         return
       }
       const { content } = req.body
-      const newPost = await db.insert(postsTable).values(req.body).returning()
-      res.send(newPost[0])
-      // 1. Generate job when new post is created with the post id
+      const newPost = await db.insert(postsTable).values({ userId, content }).returning()
+      
+      // Invalidate cache after creating a new post
+      await invalidatePostsCache();
+      
+      // Generate a job for sentiment analysis
       await sentimentQueue.add('analyzeSentiment', { postId: newPost[0].id });
+      
+      res.send(newPost[0])
     })
 
       // PUT-Function to update an existing content
@@ -39,6 +44,10 @@ export const initializePostsAPI = (app: Express) => {
         return
     }
     await db.update(postsTable).set(req.body).where(eq(postsTable.id, id))
+    
+    // Invalidate cache after updating a post
+    await invalidatePostsCache();
+    
     res.send('OK')
 })
 
@@ -57,6 +66,10 @@ export const initializePostsAPI = (app: Express) => {
             return
         }
         await db.delete(postsTable).where(eq(postsTable.id, id))
+        
+        // Invalidate cache after deleting a post
+        await invalidatePostsCache();
+        
         res.send('OK')
     })
 }

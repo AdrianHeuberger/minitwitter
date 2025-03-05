@@ -20,7 +20,7 @@ if (SERVER_ROLE === 'all' || SERVER_ROLE === 'api') {
   const port = 3000
 
 initializeMessageBroker() 
-initializeCache
+initializeCache()
 
   const app = express()
   app.use(express.json())

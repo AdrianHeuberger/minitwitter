@@ -3,6 +3,7 @@ import IORedis from 'ioredis';
 import { db, postsTable } from '../database';
 import { eq } from 'drizzle-orm';
 import { textAnalysis } from '../services/ai';
+import { invalidatePostsCache } from '../services/cache';
 
 let sentimentQueue: Queue;
 let sentimentWorker: Worker;
@@ -28,12 +29,9 @@ const initializeMessageBroker = () => {
 };
 
 const analyseSentiment = async (job: Job) => {
-    const jobData = job.data;
-    console.log(jobData);
-// 1. Generate job when new post is created with the post id (in qsi/posts.is POST/PUT endpoint)
-    // see in api/posts.ts
-    // 2. Fetch the post from the database
-    const postId = jobData.postId;
+    const { postId } = job.data;
+    console.log(`Analyzing sentiment for post ID: ${postId}`);
+
     const posts = await db.select().from(postsTable).where(eq(postsTable.id, postId)).execute();
     const post = posts[0];
 
@@ -51,6 +49,9 @@ const analyseSentiment = async (job: Job) => {
         })
         .where(eq(postsTable.id, postId))
         .execute();
+
+    // Invalidate cache after sentiment analysis updates the post
+    await invalidatePostsCache();
 
     console.log(`Sentiment analysis completed for post ID: ${postId}`);
 };
