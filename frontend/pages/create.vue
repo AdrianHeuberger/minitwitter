@@ -12,12 +12,15 @@
 </template>
 
 <script setup lang="ts">
+import { useNuxtApp } from 'nuxt/app';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const content = ref('');
 const router = useRouter();
 const token = localStorage.getItem('token');
+import { AxiosInstance } from 'axios';
+const { $axios } = useNuxtApp() as unknown as { $axios: AxiosInstance };
 
 const createPost = async () => {
   try {

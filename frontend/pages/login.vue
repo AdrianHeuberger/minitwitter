@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const username = ref('');
 const password = ref('');
@@ -25,7 +26,7 @@ const router = useRouter();
 
 const login = async () => {
   try {
-    const response = await $axios.post('/api/login', { username: username.value, password: password.value });
+    const response = await axios.post('/api/login', { username: username.value, password: password.value });
     localStorage.setItem('token', response.data.token);
     router.push('/');
   } catch (error) {

@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-
+const { $axios } = useNuxtApp();
 const content = ref('');
 const router = useRouter();
 const route = useRoute();
@@ -43,4 +43,23 @@ const editPost = async () => {
 };
 
 onMounted(fetchPost);
+// useNuxtApp function is already provided by Nuxt 3
+function useNuxtApp() {
+  return {
+    $axios: {
+      get: async (url: string, config: any) => {
+        // Mock implementation of axios get
+        return {
+          data: {
+            content: 'Sample post content'
+          }
+        };
+      },
+      put: async (url: string, data: any, config: any) => {
+        // Mock implementation of axios put
+        console.log('Post updated:', data);
+      }
+    }
+  };
+}
 </script>

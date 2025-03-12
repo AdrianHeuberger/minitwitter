@@ -14,18 +14,28 @@
 </template>
 
 <script setup lang="ts">
+import { useFetch } from 'nuxt/app';
 import { ref, onMounted } from 'vue';
 
-const posts = ref([]);
+interface Post {
+  id: number;
+  userId: number;
+  content: string;
+  sentiment?: string;
+}
+
+const posts = ref<Post[]>([]);
 const token = localStorage.getItem('token');
-const currentUserId = ref(null);
+const currentUserId = ref<number | null>(null);
 
 const fetchPosts = async () => {
   try {
-    const { data } = await useFetch ('/api/posts', {
+    const { data } = await useFetch<Post[]>('/api/posts', {
       headers: { Authorization: `Bearer ${token}` },
     });
-    posts.value = data.value;
+    if (data.value) {
+      posts.value = data.value;
+    }
   } catch (error) {
     console.error('Error fetching posts:', error);
   }
