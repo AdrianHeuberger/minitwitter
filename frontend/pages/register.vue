@@ -17,11 +17,16 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useNuxtApp } from 'nuxt/app';
 import { useRouter } from 'vue-router';
 
 const username = ref('');
 const password = ref('');
 const router = useRouter();
+import { AxiosInstance } from 'axios';
+
+const { $axios } = useNuxtApp() as any;
+const axios = $axios as AxiosInstance;
 
 const register = async () => {
   try {

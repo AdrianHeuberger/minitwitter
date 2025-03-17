@@ -11,9 +11,13 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.API_BASE_URL || 'http://localhost:3000',
-    },
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000'
+    }
   },
 
   compatibilityDate: '2025-02-26',
+
+  nitro: {
+    preset: 'node-server'
+  }
 });

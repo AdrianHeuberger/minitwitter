@@ -1,6 +1,7 @@
 import { Job, Queue, Worker } from 'bullmq';
 import IORedis from 'ioredis';
-import { db, postsTable } from '../database';
+import { db } from '../database';
+import { postsTable } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { textAnalysis } from '../services/ai';
 import { invalidatePostsCache } from '../services/cache';

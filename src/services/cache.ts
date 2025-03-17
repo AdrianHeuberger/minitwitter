@@ -84,6 +84,6 @@ export const invalidatePostsCache = async () => {
 const filterPosts = (posts: Posts, userId?: number) => {
   if (!userId) return posts;
   return posts.filter(post => 
-    post.sentiment !== 'dangerous' || post.userId === userId
+    post.posts.sentiment !== 'dangerous' || post.posts.userId === userId
   );
 }

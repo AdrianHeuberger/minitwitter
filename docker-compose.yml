@@ -1,6 +1,6 @@
 services:
   load-balancer:
-    image: nginx:alpine
+    image: nginx
     container_name: load-balancer
     ports:
       - "80:80"
@@ -9,15 +9,12 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - app-network
-    depends_on:
-      - post-api-1
-      - post-api-2
-      - minitwitter-frontend
     
   my-postgres:
     image: postgres:latest
     container_name: postgres
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: supersecret123
       POSTGRES_DB: minitwitter
     ports:
@@ -33,26 +30,40 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: post-api-1
+    image: minitwitter
     environment: 
       DATABASE_URL: postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
-    
-    #command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
+      CACHE_ACTIVE: true   
+      OLLAMA_HOST: http://ollama:12434
+      OLLAMA_MODEL: llama3.2:1b
+      REDIS_HOST: redis
+      SERVER_ROLE: api 
+    # command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
     networks:
       - app-network
     restart: always
+    depends_on:
+      - my-postgres
 
   post-api-2:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: post-api-2
+    image: minitwitter
     environment: 
       DATABASE_URL: postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
-  
-    #command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
+      CACHE_ACTIVE: true   
+      OLLAMA_HOST: http://ollama:12434
+      OLLAMA_MODEL: llama3.2:1b
+      REDIS_HOST: redis
+      SERVER_ROLE: api 
+    # command: /bin/sh -c "bunx drizzle-kit push && bun run prod"
     networks:
       - app-network
     restart: always
+    depends_on:
+      - my-postgres
 
   minitwitter-frontend:
     build:
@@ -60,7 +71,7 @@ services:
       dockerfile: Dockerfile
     container_name: minitwitter-frontend
     environment:
-      - NODE_ENV=production
+      - NUXT_PUBLIC_API_BASE_URL='http://localhost:80'
     
     networks:
       - app-network
@@ -89,18 +100,28 @@ services:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
     volumes:
       - redis_data:/data
+    networks:
+      - app-network
     restart: always
+
   minitwitter-worker:
-    image: switzerchees/my-posts-api # change this to our image
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: minitwitter-worker
+    image: minitwitter
     environment:
-     - DATABASE_URL=postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
-     - OLLAMA_HOST=http://ollama:11434
-     - REDIS_HOST=redis
-     - SERVER_ROLE=worker 
-
+      DATABASE_URL: postgresql://postgres:supersecret123@my-postgres:5432/minitwitter
+      CACHE_ACTIVE: true   
+      OLLAMA_HOST: http://ollama:12434
+      OLLAMA_MODEL: llama3.2:1b
+      REDIS_HOST: redis
+      SERVER_ROLE: worker 
+    depends_on:
+      - my-postgres
+    restart: always
+    networks:
+      - app-network
 
 
 networks:
