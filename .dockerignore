@@ -180,3 +180,5 @@ dist
 .output
 
 Frontend/node_modules
+
+docker-data
