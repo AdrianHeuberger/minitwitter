@@ -178,3 +178,5 @@ dist
 .git
 .gitignore
 .output
+
+docker-data
