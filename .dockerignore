@@ -178,7 +178,3 @@ dist
 .git
 .gitignore
 .output
-
-Frontend/node_modules
-
-docker-data
