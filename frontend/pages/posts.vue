@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-export interface ApiError {
+interface ApiError {
   message: string
   statusCode: number
 }
 
-export function useApi() {
+const useApi = () => {
   async function fetchApi<T>(url: string): Promise<{ data: T | null, error: ApiError | null }> {
     try {
       const response = await fetch(url)
