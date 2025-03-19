@@ -38,9 +38,9 @@ bun run load-test.ts
 This project is licensed under the MIT license.
 
 ##Code Organization
-One component/feature per file
-Max file length: 1000 lines
-Max function length: 40 lines
-Max line length: 80 characters
-Use meaningful variable names
-Follow Single Responsibility Principle
+- One component/feature per file
+- Max file length: 1000 lines
+- Max function length: 40 lines
+- Max line length: 80 characters
+- Use meaningful variable names
+- Follow Single Responsibility Principle
